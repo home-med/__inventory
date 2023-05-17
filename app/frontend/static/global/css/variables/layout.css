@@ -1,0 +1,35 @@
+:root {
+  --site-width-min: 85vw;
+  --site-width-max: clamp(min(100%, 60rem), 70rem, 85rem);
+  --site-width: var(--site-width-min);
+  --site-padding: calc((100vw - var(--site-width)) / 2);
+}
+
+@supports (padding: min(10%, 100px)) {
+  :root {
+    --site-width: min(var(--site-width-min), var(--site-width-max));
+    --site-padding: calc((100vw - var(--site-width)) / 2);
+  }
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header, main, footer {
+  width: var(--site-width);
+  margin: var(--spacing-x-large, 0) auto;
+}
+
+main {
+  flex: 1;
+}
+
+

@@ -1,0 +1,5 @@
+@import 'https://unpkg.com/@picocss/pico@latest/css/pico.min.css';
+@import url('./variables/colors.css');
+@import url('./variables/layout.css');
+@import url('./variables/typography.css');
+@import url('./variables/forms.css');

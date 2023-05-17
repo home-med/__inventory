@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100;400;900&family=Roboto:ital,wght@0,100;0,400;0,900;1,100;1,400;1,900&display=swap');
+
+:root {
+  --site-font-size: calc(0.938rem + 0.390625vw);
+  --site-font-sans: 'Roboto', sans-serif;
+  --site-font-serif: 'Roboto Slab', serif;
+  --site-font-spacing: 1.5;
+}
+
+html {
+  font:  normal normal 400 var(--site-font-size) / var(--site-font-spacing) var(--site-font-sans);
+}

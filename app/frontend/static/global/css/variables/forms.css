@@ -1,0 +1,59 @@
+.form-group {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-control-group {
+  --spacing: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100%;
+  position: relative;
+}
+
+.form-control-group small {
+  --font-size: 0.35rem;
+  width: 100%;
+  text-align: left;
+}
+
+.form-control-group span {
+  position: absolute;
+  font-size: 1rem;
+  line-height: var(--line-height);
+  left:0;
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  text-align: left;
+  height: calc(1rem * var(--line-height) + var(--form-element-spacing-vertical) * 2 + var(--border-width) * 2);
+  padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+  margin-bottom: var(--spacing);
+  pointer-events: none;
+  transition: all 0.3s ease-in-out, border 0.1s ease;
+  transition-delay: 0s, 0.15s;
+}
+
+
+.form-control-group input:not([type="checkbox"]):focus ~ span,
+.form-control-group input:not([type="checkbox"]):not(:placeholder-shown) ~ span,
+
+.form-control-group select:focus ~ span,
+.form-control-group select:not([data-value=""]) ~ span,
+
+.form-control-group textarea:focus ~ span,
+.form-control-group textarea:not(:placeholder-shown) ~ span {
+  color: hsl(0, 0%, 50%);
+  transform: translateX(10px) translateY(-9px);
+  font-size: 0.65rem;
+  padding: 0 10px;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  border-radius: 1rem;
+  height: 1rem;
+  line-height: 1rem;
+  background-color: #FFF;
+  letter-spacing: 0.2rem;
+  outline: none;
+}

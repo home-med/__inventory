@@ -1,0 +1,16 @@
+:root {
+    --primary: hsl(204, 78%, 41%);
+    --secondary: hsl(0, 0%, 46%);
+    --success: hsl(147, 53%, 48%);
+    --warning: hsl(41, 100%, 50%);
+    --danger: hsl(8, 59%, 51%);
+    --white: hsl(0, 0%, 100%);
+    --black: 0, 0%, 4%;
+    --light-gray: 0, 0%, 90%;
+    --mid-gray: 0, 0%, 79%;
+    --dark-gray: 0, 0%, 54%;
+    --font-size: calc(0.938rem + 0.390625vw);
+    --font-sans: 'Roboto', sans-serif;
+    --font-serif: 'Roboto Slab', serif;
+    --font-spacing: 1.5;
+}
