@@ -19,7 +19,7 @@
   text-align: left;
 }
 
-.form-control-group span {
+.form-control-group label {
   position: absolute;
   font-size: 1rem;
   line-height: var(--line-height);
@@ -36,14 +36,12 @@
 }
 
 
-.form-control-group input:not([type="checkbox"]):focus ~ span,
-.form-control-group input:not([type="checkbox"]):not(:placeholder-shown) ~ span,
+.form-control-group input:not([type="checkbox"]):focus ~ label
 
-.form-control-group select:focus ~ span,
-.form-control-group select:not([data-value=""]) ~ span,
+.form-control-group select:focus ~ label,
+.form-control-group select:not([data-value=""]) ~ label,
 
-.form-control-group textarea:focus ~ span,
-.form-control-group textarea:not(:placeholder-shown) ~ span {
+.form-control-group textarea:focus ~ label {
   color: hsl(0, 0%, 50%);
   transform: translateX(10px) translateY(-9px);
   font-size: 0.65rem;

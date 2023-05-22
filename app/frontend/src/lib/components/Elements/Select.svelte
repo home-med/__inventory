@@ -1,39 +1,49 @@
 <script lang="ts">
 	import type { Option } from '$lib/types';
-	import { uuid } from '$lib/utils';
 
-	export let id: string = '';
+	export let id: string = "select-" + Math.random().toString(36);
 	export let name: string;
+	export let title: string = '';
 	export let value: string = '';
-	export let label = '';
+	export let label: string = '';
 	export let options: Option[] = [{
 			text: 'No values',
 			value: ''
 		}];
-	export let required = false;
-	export let disabled = false;
+	export let required: boolean = false;
+	export let disabled: boolean = false;
 	export let help_text = '';
+	export let ref: HTMLSelectElement | null = null;
+	export let refLabel: HTMLSpanElement | null = null;
 
-	$: if (id === '') id = uuid();
 </script>
 
 <div class="form-control-group">
 	<select
+		bind:this="{ref}"
+		bind:value
 		{id}
 		{name}
 		{required}
-		aria-required={required || null}
 		{disabled}
+		aria-required={required || null}
 		aria-disabled={disabled || null}
 		data-value={value}
-		bind:value
+		on:change
+		on:blur
 	>
 		<option value="" selected />
 		{#each options as option}
 			<option value={option.value}>{option.text}</option>
 		{/each}
 	</select>
-	<span>{label}</span>
+	<label for={id} {title}>
+		<span bind:this={refLabel}>
+			<slot name="labelText">
+				{label}
+			</slot>
+		</span>
+	</label>
 	<small>{help_text} {value}</small>
 </div>
 
