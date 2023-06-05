@@ -172,3 +172,5 @@ $RECYCLE.BIN/
 *.db*
 pocketbase.exe
 v1
+*.bat
+backups
