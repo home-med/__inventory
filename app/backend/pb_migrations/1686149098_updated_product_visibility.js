@@ -1,0 +1,53 @@
+migrate((db) => {
+  const dao = new Dao(db)
+  const collection = dao.findCollectionByNameOrId("womgti1ltdirstt")
+
+  collection.indexes = [
+    "CREATE UNIQUE INDEX `idx_vI9kb9g` ON `product_visibility` (\n  `item`,\n  `location`\n)"
+  ]
+
+  // update
+  collection.schema.addField(new SchemaField({
+    "system": false,
+    "id": "stmzwhvb",
+    "name": "item",
+    "type": "relation",
+    "required": true,
+    "unique": false,
+    "options": {
+      "collectionId": "92ayi6ky9a36f4y",
+      "cascadeDelete": false,
+      "minSelect": null,
+      "maxSelect": 1,
+      "displayFields": []
+    }
+  }))
+
+  return dao.saveCollection(collection)
+}, (db) => {
+  const dao = new Dao(db)
+  const collection = dao.findCollectionByNameOrId("womgti1ltdirstt")
+
+  collection.indexes = [
+    "CREATE UNIQUE INDEX `idx_vI9kb9g` ON `product_visibility` (\n  `product`,\n  `location`\n)"
+  ]
+
+  // update
+  collection.schema.addField(new SchemaField({
+    "system": false,
+    "id": "stmzwhvb",
+    "name": "product",
+    "type": "relation",
+    "required": true,
+    "unique": false,
+    "options": {
+      "collectionId": "92ayi6ky9a36f4y",
+      "cascadeDelete": false,
+      "minSelect": null,
+      "maxSelect": 1,
+      "displayFields": []
+    }
+  }))
+
+  return dao.saveCollection(collection)
+})
