@@ -1,18 +1,18 @@
 <script lang="ts">
 	import type { Option } from '$lib/types';
 
-	export let id: string = "select-" + Math.random().toString(36);
+	export let id: string = "sel-" + Math.random().toString(36);
 	export let name: string;
 	export let title: string = '';
 	export let value: string = '';
-	export let label: string = '';
+	export let labelText: string = '';
 	export let options: Option[] = [{
 			text: 'No values',
 			value: ''
 		}];
 	export let required: boolean = false;
 	export let disabled: boolean = false;
-	export let help_text = '';
+	export let helpText = '';
 	export let ref: HTMLSelectElement | null = null;
 	export let refLabel: HTMLSpanElement | null = null;
 
@@ -40,11 +40,11 @@
 	<label for={id} {title}>
 		<span bind:this={refLabel}>
 			<slot name="labelText">
-				{label}
+				{labelText}
 			</slot>
 		</span>
 	</label>
-	<small>{help_text} {value}</small>
+	<small>{helpText}</small>
 </div>
 
 <style>

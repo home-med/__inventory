@@ -3,14 +3,14 @@
 	import { createEventDispatcher } from "svelte";
 
 	export let name: string;
-	export let label: string;
-	export let id: string = 'txtarea-' + Math.random().toString(36);
+	export let labelText: string;
+	export let id: string = 'ta-' + Math.random().toString(36);
 	export let value: string = '';
 	export let title: string = '';
 	export let required: boolean = false;
 	export let disabled: boolean = false;
 	export let readonly: boolean = false;
-	export let help_text: string = '';
+	export let helpText: string = '';
 	export let ref: HTMLTextAreaElement | null = null;
 	export let refLabel: HTMLSpanElement | null = null;
 </script>
@@ -24,6 +24,7 @@
 		{disabled}
 		{readonly}
 		{required}
+		placeholder=""
 		aria-required={required || null}
 		aria-disabled={disabled || null}
 		aria-readonly={readonly || null}
@@ -40,15 +41,12 @@
 	<label for={id} {title}>
 		<span bind:this={refLabel}>
 			<slot name="labelText">
-				{label}
+				{labelText}
 			</slot>
 		</span>
 	</label>
-	<small>{help_text}</small>
+	<small>{helpText}</small>
 </div>
 
 <style>
-	small {
-		font-size: 0.3rem;
-	}
 </style>

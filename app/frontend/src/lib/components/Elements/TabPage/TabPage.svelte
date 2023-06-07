@@ -1,15 +1,11 @@
 <script lang="ts">
-	export let tabs = [{
-		id: "test1",
-		label: "Test 1",
-		active: true
-	}, {
-		id: "test2",
-		label: "Test 2"
-	}, {
-		id: "test3",
-		label: "Test 3"
-	}];
+	type TTab = {
+		id: string
+		label: string
+		active?: boolean
+	}
+
+	export let tabs: TTab[] = [];
 
 	const handleClick = (e: MouseEvent | KeyboardEvent) => {
 		const content = [...document.querySelectorAll('.container--content > *')];
@@ -18,8 +14,8 @@
 		const id = target.getAttribute('data-tab-for')
 		if (!id) return;
 		content.map(elm => {
-			if (elm.getAttribute('data-tab-id') === id) elm.classList.add('content--active');
-			else elm.classList.remove('content--active');
+			if (elm.getAttribute('data-tab-id') === id) elm.classList.add('tab-content--active');
+			else elm.classList.remove('tab-content--active');
 		});
 		tabs.map(elm => {
 			if (elm.getAttribute('data-tab-for') === id) elm.classList.add('tabs--active');

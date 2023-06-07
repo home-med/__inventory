@@ -2,7 +2,8 @@
 	import { enhance} from '$app/forms';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import {Button} from '$lib/components/Elements/Button';
-	import {TextArea} from '$lib/components/Elements/TextArea';
+	import {Checkbox} from '$lib/components/Elements/Checkbox';
+	import {TextInput} from '$lib/components/Elements/TextInput';
 
 	export let loading = false;
 
@@ -16,15 +17,23 @@
 </script>
 
 <details>
-	<summary>Add Vendor</summary>
-	<form action="?/addVendor" method="POST" use:enhance={submitForm}>
+	<summary>Add Location</summary>
+	<form action="?/addLocation" method="POST" use:enhance={submitForm}>
 		<input type="hidden" name="table" value="vendor" />
 		<div class="form-group">
-			<TextArea
-				labelText="Name"
+			<TextInput
+				labelText="Location Name"
 				name="name"
-				helpText="Can contain multiple items, one per line no commas."
+				helpText="Full proper name of the location"
 			/>
+			<TextInput
+				labelText="Location Short Name"
+				name="short_name"
+				helpText="Name abbreviation 3-4 characters"
+			/>
+		</div>
+		<div class="form-group">
+			<Checkbox name="active" />
 		</div>
 		<div class="form-group">
 			<Button type="submit" {loading}>Add Vendor</Button>

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 
-	export let name: string;
-	export let id: string = 'checkbox' + Math.random().toString(36);
-	export let label: string = '';
+	export let name: string | null = null;
+	export let id: string = 'cb' + Math.random().toString(36);
+	export let labelText: string = '';
 	export let value: string = '';
 	export let title: string = '';
 	export let group: string[] = [];
@@ -17,6 +17,16 @@
 
 	const dispatch = createEventDispatcher();
 
+	const onChange = () => {
+		if (useGroup) {
+			group = group.includes(value)
+				? group.filter((val) => val !== value)
+				: [...group, value];
+		} else {
+			checked = !checked;
+		}
+	};
+
 	$: useGroup = Array.isArray(group);
 	$: checked = useGroup ? group.includes(value) : checked;
 </script>
@@ -24,14 +34,15 @@
 <div class="form-control-group">
 	<input
 		bind:this={ref}
-		bind:value
+		role="switch"
 		type="checkbox"
 		{id}
-		{name}
+		name={name}
 		{disabled}
 		{readonly}
 		{required}
 		{indeterminate}
+		{value}
 		aria-required={required || null}
 		aria-disabled={disabled || null}
 		aria-readonly={readonly || null}
@@ -40,25 +51,18 @@
 		on:focus
 		on:blur
 		on:paste
+		on:change={onChange}
+		on:change
 	/>
 
 	<label for={id} {title}>
 		<span bind:this={refLabel}>
 			<slot name="labelText">
-				{label}
+				{labelText}
 			</slot>
 		</span>
 	</label>
 </div>
 
 <style>
-	.form-control-group {
-		flex-flow: row nowrap;
-	}
-	label {
-		position: relative;
-	}
-	input[type='checkbox'] {
-		margin: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
-	}
 </style>

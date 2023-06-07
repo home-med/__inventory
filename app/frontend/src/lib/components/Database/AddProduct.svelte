@@ -1,28 +1,39 @@
 <script lang="ts">
-	import { enhance, type SubmitFunction } from '$app/forms';
+	import { enhance } from '$app/forms';
+	import type { SubmitFunction } from '@sveltejs/kit';
 	import type { Option, TLocation } from '$lib/types';
+	import toast from 'svelte-french-toast'
 
-	import Select from '../Elements/Select.svelte';
-	import Button from '../Elements/Button.svelte';
-	import TabPage from '../Elements/TabPage.svelte';
-	import Input from '../Elements/Input.svelte';
-	import Textarea from '../Elements/Textarea.svelte';
-	import Checkbox from '../Elements/Checkbox.svelte';
+	import {Select} from '$lib/components/Elements/Select';
+	import {Button} from '$lib/components/Elements/Button';
+	import {TabPage} from '$lib/components/Elements/TabPage';
+	import {TextInput} from '$lib/components/Elements/TextInput';
+	import {TextArea} from '$lib/components/Elements/TextArea';
+	import {Toggle} from '$lib/components/Elements/Toggle';
 
 	export let loading = false;
 	export let brands: Option[];
 	export let vendors: Option[];
 	export let locations: TLocation[] = [];
 
-	$: all = visibility.find((item) => item === 'all') === 'all';
-
-	let visibility: string[] = [];
 	let group: string[] = [];
+	let batch = 0;
+	let total = 0;
 
-	const setAll = () => {
-		locations.forEach((item) => {
-			visibility.push(item.id);
-		});
+	const onChangeLocation = (e: Event): void => {
+		const target = e.target as HTMLInputElement;
+		const { checked, value } = target;
+		if (checked) {
+			if (value === 'all') {
+				locations.forEach((v) => {
+					group = !group.includes(v.id) ? [...group, v.id] : group;
+				});
+			} else {
+				group = group.includes(value) ? group : [...group, value];
+			}
+		} else {
+			group = group.filter((v) => v !== value);
+		}
 	};
 
 	const tabs = [
@@ -32,16 +43,41 @@
 		},
 		{
 			id: 'multi',
-			label: 'Multiple Items'
+			label: 'Multiple Items',
+			active: true
 		}
 	];
 
-	const submitForm: SubmitFunction = (input) => {
+	const onInputProduct = (e: Event) => {
+		const target: HTMLTextAreaElement = e.currentTarget as HTMLTextAreaElement;
+		if (target.value.match(/\t/g)) {
+			target.value.replace(/\t/gi, ',');
+		}
+	};
+
+	const submitForm: SubmitFunction = ({data, cancel}) => {
 		loading = true;
 
-		return async () => {
+		if (data.get('brand') === "") {
+			toast.error("Brand cannot be blank. If it really is, it shouldn't be");
+			cancel()
+		}
+
+		return async ({ result, update }: { result: any, update: any}) => {
+			console.log(result);
 			loading = false;
-			input.form.reset();
+			group = [];
+			switch (result.type) {
+				case 'success':
+					toast.success('Products added.');
+					break;
+				case 'failure':
+					toast.error(result.data.message);
+					break;
+				default:
+					break;
+			}
+			await update();
 		};
 	};
 </script>
@@ -49,33 +85,38 @@
 <details>
 	<summary>Add Products</summary>
 	<TabPage {tabs}>
-		<div class="content" data-tab-id="single">
+		<div class="tab-content" data-tab-id="single">
 			<form action="?/addProduct" method="POST" use:enhance={submitForm}>
 				<input type="hidden" name="quantity" value="single" />
 				<div class="form-group">
-					<Input label="Name" name="name" help_text="Product Name" />
+					<TextInput labelText="Name" name="name" help_text="Product Name" />
 				</div>
 				<div class="form-group">
-					<Input label="UPC" name="upc" help_text="UPC number" />
-					<Input label="EAN" name="ean" help_text="EAN number" />
+					<TextInput labelText="UPC" name="upc" help_text="UPC number" />
+					<TextInput labelText="EAN" name="ean" help_text="EAN number" />
 				</div>
 				<div class="form-group">
-					<Input label="Custom SKU" name="custom_sku" help_text="Our SKU" required />
-					<Input label="Manufacturer SKU" name="manufact_sku" help_text="The brands SKU" required />
+					<TextInput labelText="Custom SKU" name="custom_sku" help_text="Our SKU" required />
+					<TextInput
+						labelText="Manufacturer SKU"
+						name="manufact_sku"
+						help_text="The brands SKU"
+						required
+					/>
 				</div>
 				<div class="form-group">
 					<Select
-						label="Brands"
+						labelText="Brands"
 						name="brand"
 						options={brands}
-						help_text="Who makes the item"
+						helpText="Who makes the item"
 						required
 					/>
 					<Select
-						label="Vendors"
+						labelText="Vendors"
 						name="vendor"
 						options={vendors}
-						help_text="Who we get the item from."
+						helpText="Who we get the item from."
 						required
 					/>
 				</div>
@@ -84,37 +125,42 @@
 				</div>
 			</form>
 		</div>
-		<div class="content content--active" data-tab-id="multi">
+		<div class="tab-content tab-content--active" data-tab-id="multi">
 			<form action="?/addProduct" method="POST" use:enhance={submitForm}>
 				<input type="hidden" name="quantity" value="multi" />
-				<input type="hidden" name="visibility" bind:value={visibility} />
-
+				{#if batch > 0}
+					Processing {batch} of {total}
+				{/if}
 				<div class="form-group">
-					<Textarea
-						label="Products"
+					<TextArea
+						labelText="Products"
 						name="products"
-						help_text="Copy / Paste the csv values. Each line is its own item."
+						helpText="Copy / paste CSV file to the input field. Include header row."
+						on:input={onInputProduct}
 					/>
 				</div>
-				{group}
 				<div class="form-group">
-					<Checkbox
-						label="Set visible to all locations?"
-						name="visibility"
+					<input type="hidden" name="locations" bind:value={group} />
+					<Toggle
+						labelText="Set visibility to all sites?"
 						value="all"
-						bind:group={visibility}
+						bind:group
+						disabled={locations.length < 2}
+						on:change={onChangeLocation}
 					/>
 				</div>
-				<p style="text-align: left">Set visibility to a specific site</p>
 				<div class="form-group">
-					{#each locations as location, index}
-						<Checkbox
-							label={location.name}
-							name="visibility"
+					{#each locations as location (location.id)}
+						<Toggle
+							labelText={location.name}
+							bind:group
 							value={location.id}
-							disabled={all}
-							bind:group={visibility}
+							checked={group.includes(location.id)}
+							on:change={onChangeLocation}
+							disabled={group.includes('all')}
 						/>
+					{:else}
+						No locations available.
 					{/each}
 				</div>
 				<div class="form-group">
@@ -126,11 +172,11 @@
 </details>
 
 <style>
-	.content {
+	.tab-content {
 		display: none;
 	}
 
-	.content--active {
+	.tab-content--active {
 		display: block;
 	}
 </style>

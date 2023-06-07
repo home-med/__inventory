@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { enhance, type SubmitFunction } from '$app/forms';
-	import Button from '$lib/components/Elements/Button.svelte';
-	import Textarea from '$lib/components/Elements/Textarea.svelte';
+	import { enhance } from '$app/forms';
+	import type { SubmitFunction } from '@sveltejs/kit';
+	import {Button} from '$lib/components/Elements/Button';
+	import {TextArea} from '$lib/components/Elements/TextArea';
 
 	export let loading = false;
 
-	const submitForm: SubmitFunction = (input) => {
+	const submitForm: SubmitFunction = ({}) => {
 		loading = true;
 
 		return async ({ update }) => {
@@ -20,10 +21,10 @@
 	<form action="?/addBrand" method="POST" use:enhance={submitForm}>
 		<input type="hidden" name="table" value="brand" />
 		<div class="form-group">
-			<Textarea
-				label="Name"
+			<TextArea
+				labelText="Name"
 				name="name"
-				help_text="Can contain multiple items, one per line no commas."
+				helpText="Can contain multiple items, one per line no commas."
 			/>
 		</div>
 		<div class="form-group">

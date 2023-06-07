@@ -1,5 +1,6 @@
 <script context="module">
 	import Nav from "$lib/components/Nav.svelte";
+	import {Toaster} from 'svelte-french-toast'
 </script>
 <script lang="ts">
 
@@ -23,6 +24,7 @@
 </header>
 
 <main>
+	<Toaster />
 	<slot />
 </main>
 

@@ -6,6 +6,7 @@
 	import AddVendor from '$lib/components/Database/AddVendor.svelte';
   import AddProduct from '$lib/components/Database/AddProduct.svelte';
 	import SetVisibility from '$lib/components/Database/SetVisibility.svelte';
+	import AddLocation from '$lib/components/Database/AddLocation.svelte';
 
   export let data: PageData;
 
@@ -26,6 +27,8 @@
   <AddVendor {loading} />
   
   <AddProduct {loading} {brands} {vendors} {locations} />
+
+  <AddLocation {loading} />
 
   <SetVisibility {loading} {locations} />
 </div>
