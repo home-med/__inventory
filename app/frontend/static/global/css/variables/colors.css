@@ -9,8 +9,4 @@
     --light-gray: 0, 0%, 90%;
     --mid-gray: 0, 0%, 79%;
     --dark-gray: 0, 0%, 54%;
-    --font-size: calc(0.938rem + 0.390625vw);
-    --font-sans: 'Roboto', sans-serif;
-    --font-serif: 'Roboto Slab', serif;
-    --font-spacing: 1.5;
 }

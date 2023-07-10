@@ -10,6 +10,7 @@ declare global {
 		}
 		interface Locals {
 			pb: PocketBase
+			authClient: any
 			brands: any[]
 			vendors: any[]
 			sessionId: string

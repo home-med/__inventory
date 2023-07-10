@@ -1,6 +1,5 @@
 <script lang="ts">
-	import Button from '$lib/components/Elements/Button/Button.svelte';
-import Textarea from '$lib/components/Elements/TextArea/TextArea.svelte';
+	import { Button, TextArea } from "carbon-components-svelte";
 
 	let csv: string;
 	let filter: string;
@@ -36,23 +35,23 @@ import Textarea from '$lib/components/Elements/TextArea/TextArea.svelte';
 <details>
 	<summary>Filter csv of items by list of items.</summary>
 	<div class="form-group">
-		<Textarea
+		<TextArea
 			labelText="CSV Values"
 			name="csv"
-			helpText="One item per line"
+			helperText="One item per line"
 			bind:value={csv}
 		/>
 	</div>
 	<div class="form-group">
-		<Textarea
+		<TextArea
 			labelText="Values to find"
 			name="vals"
-			helpText="One item per line"
+			helperText="One item per line"
 			bind:value={filter}
 		/>
 	</div>
   <div class="form-group">
-    <Button type="submit" {loading}>Submit</Button>
+    <Button type="submit" >Submit</Button>
   </div>
 </details>
 

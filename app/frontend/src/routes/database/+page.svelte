@@ -1,38 +1,39 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-
-  import type {TLocation, Option} from '$lib/types';
-	import AddBrand from '$lib/components/Database/AddBrand.svelte';
-	import AddVendor from '$lib/components/Database/AddVendor.svelte';
-  import AddProduct from '$lib/components/Database/AddProduct.svelte';
-	import SetVisibility from '$lib/components/Database/SetVisibility.svelte';
-	import AddLocation from '$lib/components/Database/AddLocation.svelte';
-
-  export let data: PageData;
-
-  const brands: Option[] = data.brands.map(item => ({text: item.name, value: item.id}));
-  const vendors: Option[] = data.vendors.map(item => ({text: item.name, value: item.id}));
-  const locations: TLocation[] = data.locations
-
-  let loading = false;
+	import { AddBrand } from '$lib/components/Database/AddBrand';
+	import { AddVendor } from '$lib/components/Database/AddVendor';
+  import { AddProduct } from '$lib/components/Database/Product/Add';
+	import { AddLocation } from '$lib/components/Database/AddLocation';
+	import { Search as ProductSearch } from '$lib/components/Database/Product/Search';
+	import { AllElements } from '$lib/components/Database/AllElements';
+	import { Accordion, AccordionItem } from 'carbon-components-svelte';
 </script>
 
 <svelte:head>
   <title>Database administration</title>
 </svelte:head>
 
-<div>
-  <AddBrand {loading} />
+<Accordion>
+  <AccordionItem title="Add Brand">
+    <AddBrand />
+  </AccordionItem>
 
-  <AddVendor {loading} />
+  <AccordionItem title="Add Vendor">
+    <AddVendor />
+  </AccordionItem>
   
-  <AddProduct {loading} {brands} {vendors} {locations} />
+  <AccordionItem title="Add Product">
+    <AddProduct />
+  </AccordionItem>
 
-  <AddLocation {loading} />
+  <AccordionItem title="Add Location">
+    <AddLocation />
+  </AccordionItem>
 
-  <SetVisibility {loading} {locations} />
-</div>
+  <AccordionItem title="Product Search">
+    <ProductSearch />
+  </AccordionItem>
 
-
-<style>
-</style>
+  <AccordionItem title="All Elements">
+    <AllElements />
+  </AccordionItem>
+</Accordion>

@@ -2,7 +2,8 @@
   import { base } from "$app/paths";
   const links: string[][] = [
     ["Home", "/"],
-    ["Database", "/database"],
+    ["Product", "/product"]
+,    ["Database", "/database"],
     ["Miscellaneous", "/misc"],
     ["About", "/about"],
     ["Long", "/long"],
@@ -18,5 +19,8 @@
 </nav>
 
 <style>
-
+ul {
+  display: flex;
+  justify-content: space-around;
+}
 </style>
