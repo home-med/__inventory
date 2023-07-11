@@ -3,29 +3,32 @@
 	import { siteStore } from '$lib/stores/site';
 	import type { LocationResponse } from '$lib/pocketbase-types';
 
+	let selected: string[] = [];
 	const locations: LocationResponse[] = $siteStore.locations;
+	$: console.log(locations.length, group.length - 1);
 	let group: string[] = [];
-	let all = false;
-
-	$: group = group.includes("all") ? [] : group;
+	const toggleAll = (e: Event) => {
+		if (e.target instanceof HTMLInputElement) {
+			selected = e.target.checked ? [...locations.map(item => item.id)] : [];
+		}
+	};
  	</script>
 
-All {all}<br >
-{JSON.stringify(group)}
-<input type="hidden" name="locations" bind:value={group} />
+{JSON.stringify(selected)}
+<input type="hidden" name="locations" bind:value={selected} />
 <FormGroup legendText="Visibility">
 	<Checkbox
 		labelText="Set visibility to all sites?"
 		value="all"
-		bind:group
 		disabled={locations.length < 2}
+		on:change={toggleAll}
+		checked={selected.length === locations.length}
 	/>
 	{#each locations as location (location.id)}
 		<Checkbox
 			labelText={location.name}
 			value={location.id}
-			bind:group
-			disabled={all}
+			bind:group={selected}
 		/>
 	{:else}
 		No locations available.
