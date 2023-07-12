@@ -14,7 +14,6 @@
 	};
  	</script>
 
-{JSON.stringify(selected)}
 <input type="hidden" name="locations" bind:value={selected} />
 <FormGroup legendText="Visibility">
 	<Checkbox
