@@ -174,3 +174,4 @@ pocketbase.exe
 v1
 *.bat
 backups
+!app/backend/database/data.db.sql
