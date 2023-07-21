@@ -1,5 +1,5 @@
 import type { BrandResponse, ProductResponse, VendorResponse } from "$lib/pocketbase-types";
-import { pb } from "$lib/server";
+import { pb } from "$lib/client";
 import { fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -9,7 +9,7 @@ type Texpand = {
 }
 
 export const load: PageServerLoad = async ({params}) => {
-  const product: ProductResponse<Texpand> = structuredClone(await pb.collection("product").getOne(params.id, { expand:"brand,vendor" }));
+  const product: ProductResponse<Texpand> = structuredClone(await pb.collection("product").getOne(params.id, { expand:"brand,vendor,visibility,system_id" }));
   return { product };
 }
 

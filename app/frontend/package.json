@@ -34,7 +34,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"pocketbase": "0.15.2",
-		"svelte-french-toast": "^1.0.4-beta.0"
+		"pocketbase": "0.15.2"
 	}
 }

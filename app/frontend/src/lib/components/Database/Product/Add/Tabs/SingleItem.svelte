@@ -1,25 +1,33 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import { Button, Select, SelectItem, TextInput } from 'carbon-components-svelte';
-	import { siteStore } from '$lib/stores/site';
-
-	import SetVisibility from '$lib/components/Database/SetVisibility/SetVisibility.svelte';
-
 	import type { BrandResponse, VendorResponse } from '$lib/pocketbase-types';
+	import { createEventDispatcher } from 'svelte';
+	
+	import { Button, Form, FormGroup, Select, SelectItem, TextInput } from 'carbon-components-svelte';
+	
+	import { siteStore } from '$lib/stores/site';
+	import SetVisibility from '$lib/components/Database/SetVisibility/SetVisibility.svelte';
 
 	const brands: BrandResponse[] = $siteStore.brands;
 	const vendors: VendorResponse[] = $siteStore.vendors;
+	const dispatch = createEventDispatcher();
+
+function handleSubmit(event: Event) {
+	if (!(event.target instanceof HTMLFormElement)) return;
+	event.preventDefault();
+	const data = new FormData(event.target);
+	dispatch('submit', { event, data });
+}
 </script>
 
-<form action="?/addProductSingle" method="POST" use:enhance>
-	<div class="form-group">
+<Form action="?/addProductSingle" method="POST" on:submit={handleSubmit}>
+	<FormGroup>
 		<TextInput labelText="Name" name="item" helperText="Product Name" />
-	</div>
-	<div class="form-group">
+	</FormGroup>
+	<FormGroup>
 		<TextInput labelText="UPC" name="upc" helperText="UPC number" />
 		<TextInput labelText="EAN" name="ean" helperText="EAN number" />
-	</div>
-	<div class="form-group">
+	</FormGroup>
+	<FormGroup>
 		<TextInput labelText="Custom SKU" name="custom_sku" helperText="Our SKU" required />
 		<TextInput
 			labelText="Manufacturer SKU"
@@ -27,8 +35,8 @@
 			helperText="The brands SKU"
 			required
 		/>
-	</div>
-	<div class="form-group">
+	</FormGroup>
+	<FormGroup>
 		<Select labelText="Brands" name="brand" helperText="Who makes the item" required>
 			{#each brands as brand}
 				<SelectItem value="{brand.id}" text="{brand.name}" />
@@ -39,9 +47,9 @@
 				<SelectItem value="{vendor.id}" text="{vendor.name}" />
 			{/each}
 		</Select>
-	</div>
+	</FormGroup>
 	<SetVisibility />
-	<div class="form-group">
+	<FormGroup>
 		<Button type="submit">Add Product</Button>
-	</div>
-</form>
+	</FormGroup>
+</Form>

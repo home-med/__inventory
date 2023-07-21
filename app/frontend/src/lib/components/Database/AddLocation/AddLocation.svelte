@@ -1,37 +1,12 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import type { SubmitFunction } from '@sveltejs/kit';
-	import { Button, Checkbox, TextInput } from 'carbon-components-svelte';
-
-	export let loading = false;
-
-	const submitForm: SubmitFunction = (input) => {
-		loading = true;
-
-		return async ({ update }) => {
-			loading = false;
-		};
-	};
+	import { Tab, TabContent, Tabs } from 'carbon-components-svelte';
+	import { Single } from './Tabs';
+	import { submitForm } from '../db_utils';
 </script>
 
-<form action="?/addLocation" method="POST" use:enhance={submitForm}>
-	<input type="hidden" name="table" value="vendor" />
-	<div class="form-group">
-		<TextInput
-			labelText="Location Name"
-			name="name"
-			helperText="Full proper name of the location"
-		/>
-		<TextInput
-			labelText="Location Short Name"
-			name="short_name"
-			helperText="Name abbreviation 3-4 characters"
-		/>
-	</div>
-	<div class="form-group">
-		<Checkbox name="active" labelText="Active" />
-	</div>
-	<div class="form-group">
-		<Button type="submit">Add Vendor</Button>
-	</div>
-</form>
+<Tabs>
+	<Tab label="Single Item" />
+	<svelte:fragment slot="content">
+		<TabContent><Single on:submit={submitForm} /></TabContent>
+	</svelte:fragment>
+</Tabs>

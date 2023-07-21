@@ -1,28 +1,31 @@
 <script lang="ts">
-	import Nav from "$lib/components/Nav.svelte";
+	import Nav from '$lib/components/Nav.svelte';
+	import { Toasts } from '$lib/components/Toast';
 </script>
 
 <svelte:head>
 	<!-- Roboto -->
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700" />
+	<link
+		rel="stylesheet"
+		href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700"
+	/>
 	<!-- Roboto Mono -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono" />
 	<link rel="stylesheet" href="/global/css/style.css" />
-  <title>Administration Page</title>
+	<title>Administration Page</title>
 </svelte:head>
 
+<Toasts />
+
 <header>
-  <Nav />
+	<Nav />
 </header>
 
 <main>
 	<slot />
 </main>
 
-<footer>
-  Footer
-</footer>
+<footer>Footer</footer>
 
 <style>
-	
 </style>

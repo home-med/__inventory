@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Select, SelectItem } from 'carbon-components-svelte';
+	import { Form, FormGroup, Select, SelectItem } from 'carbon-components-svelte';
 	import { Searchbar } from '$lib/components/Searchbar';
 	import { goto } from '$app/navigation';
 
@@ -10,8 +10,8 @@
 	};
 </script>
 
-<form action="#" method="POST" on:submit|preventDefault>
-	<div class="form-group">
+<Form action="#" method="POST" on:submit={(e) => {e.preventDefault();}}>
+	<FormGroup>
 		<Select labelText="Search field" bind:selected={searchField}>
 			<SelectItem value="system_id" text="System ID" disabled />
 			<SelectItem value="id" text="Internal ID" />
@@ -20,5 +20,5 @@
 			<SelectItem value="custom_sku" text="Custom SKU" />
 		</Select>
 		<Searchbar {searchField} on:pick={onPick} />
-	</div>
-</form>
+	</FormGroup>
+</Form>

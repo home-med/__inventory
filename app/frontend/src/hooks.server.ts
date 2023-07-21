@@ -1,5 +1,6 @@
-import { authClient, brands, pb, vendors } from '$lib/server';
-import type { Handle, HandleServerError } from '@sveltejs/kit';
+import { authClient } from "$lib/server";
+import {  pb } from "$lib/client"
+import type { Handle, HandleServerError } from "@sveltejs/kit";
 
 
 import crypto from 'crypto';
@@ -8,8 +9,8 @@ import crypto from 'crypto';
 export const handle: Handle = async ({ event, resolve }) => {
   event.locals.sessionId = crypto.randomUUID();
   event.locals.pb = pb;
-  event.locals.brands = brands;
-  event.locals.vendors = vendors;
+  event.locals.brands = await pb.collection("brand").getFullList({sort: "name"});
+  event.locals.vendors = await pb.collection("brand").getFullList({sort: "name"});
   event.locals.authClient = authClient;
 
   try {
@@ -26,11 +27,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 export const handleError: HandleServerError = async ({ error, event }) => {
   const errorId = crypto.randomUUID();
-  console.error("----------------------------<[ERROR ERROR ERROR]>----------------------------");
-  console.error("Random ID:", errorId, "\nEvent:", event, "\n", error)
-  console.error("-----------------------------<[ERROR ERROR ERROR]>-----------------------------");
-  return {
-    message: "Something went terribly wrong on the server side!",
-    errorId,
-  };
+  if (error instanceof Error) {
+    console.log(error);
+    return {
+      message: error.toString(),
+      errorId,
+    };
+  }
 }

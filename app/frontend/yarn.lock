@@ -1618,13 +1618,6 @@ svelte-check@3.4.3:
     svelte-preprocess "^5.0.3"
     typescript "^5.0.3"
 
-svelte-french-toast@^1.0.4-beta.0:
-  version "1.0.4-beta.0"
-  resolved "https://registry.yarnpkg.com/svelte-french-toast/-/svelte-french-toast-1.0.4-beta.0.tgz#ad4c38aedb3730d903a67402f7da153dc63f68e1"
-  integrity sha512-PkYNukEQAPZyV5ei+JzeYEsbaXFSbJS8/SDTdC8giYa5Atxp2SRepFnPDWx6mu7rV53g886FNLktPMLwRljkpw==
-  dependencies:
-    svelte-writable-derived "^3.0.1"
-
 svelte-hmr@^0.15.1:
   version "0.15.2"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.15.2.tgz#d2f6fc82e040f2734abd54cea5cbef46828f2538"
@@ -1640,11 +1633,6 @@ svelte-preprocess@^5.0.3:
     magic-string "^0.27.0"
     sorcery "^0.11.0"
     strip-indent "^3.0.0"
-
-svelte-writable-derived@^3.0.1:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/svelte-writable-derived/-/svelte-writable-derived-3.1.0.tgz#ea114125805a9d18398577f2431d1e8cdd4d8d69"
-  integrity sha512-cTvaVFNIJ036vSDIyPxJYivKC7ZLtcFOPm1Iq6qWBDo1fOHzfk6ZSbwaKrxhjgy52Rbl5IHzRcWgos6Zqn9/rg==
 
 svelte@3.59.1:
   version "3.59.1"

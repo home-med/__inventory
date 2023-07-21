@@ -6,6 +6,7 @@ export enum Collections {
 	Brand = "brand",
 	Location = "location",
 	Product = "product",
+	ProductSystemId = "product_system_id",
 	ProductVisibility = "product_visibility",
 	Users = "users",
 	Vendor = "vendor",
@@ -54,8 +55,16 @@ export type ProductRecord = {
 	custom_sku?: string
 	vendor?: RecordIdString
 	brand?: RecordIdString
+	visibility?: RecordIdString[]
+	system_id?: RecordIdString
 	notes?: string
 	archived?: boolean
+}
+
+export type ProductSystemIdRecord = {
+	product?: RecordIdString
+	location?: RecordIdString
+	system_id?: string
 }
 
 export type ProductVisibilityRecord = {
@@ -79,6 +88,7 @@ export type VendorRecord = {
 export type BrandResponse = Required<BrandRecord> & BaseSystemFields
 export type LocationResponse = Required<LocationRecord> & BaseSystemFields
 export type ProductResponse<Texpand = unknown> = Required<ProductRecord> & BaseSystemFields<Texpand>
+export type ProductSystemIdResponse<Texpand = unknown> = Required<ProductSystemIdRecord> & BaseSystemFields<Texpand>
 export type ProductVisibilityResponse<Texpand = unknown> = Required<ProductVisibilityRecord> & BaseSystemFields<Texpand>
 export type UsersResponse = Required<UsersRecord> & AuthSystemFields
 export type VendorResponse = Required<VendorRecord> & BaseSystemFields
@@ -89,6 +99,7 @@ export type CollectionRecords = {
 	brand: BrandRecord
 	location: LocationRecord
 	product: ProductRecord
+	product_system_id: ProductSystemIdRecord
 	product_visibility: ProductVisibilityRecord
 	users: UsersRecord
 	vendor: VendorRecord
@@ -98,6 +109,7 @@ export type CollectionResponses = {
 	brand: BrandResponse
 	location: LocationResponse
 	product: ProductResponse
+	product_system_id: ProductSystemIdResponse
 	product_visibility: ProductVisibilityResponse
 	users: UsersResponse
 	vendor: VendorResponse
