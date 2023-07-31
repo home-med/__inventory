@@ -4,8 +4,14 @@
   import { AddProduct } from '$lib/components/Database/Product/Add';
 	import { AddLocation } from '$lib/components/Database/AddLocation';
 	import { Search as ProductSearch } from '$lib/components/Database/Product/Search';
-	import { AllElements } from '$lib/components/Database/AllElements';
 	import { Accordion, AccordionItem } from 'carbon-components-svelte';
+	import type { PageData } from './$types';
+
+  export let data: PageData;
+  const brands = data.brands;
+  const vendors = data.vendors;
+  const locations = data.locations;
+  const products = data.products;
 </script>
 
 <svelte:head>
@@ -22,7 +28,7 @@
   </AccordionItem>
   
   <AccordionItem title="Add Product">
-    <AddProduct />
+    <AddProduct {brands} {vendors} {locations} />
   </AccordionItem>
 
   <AccordionItem title="Add Location">
@@ -31,9 +37,5 @@
 
   <AccordionItem title="Product Search">
     <ProductSearch />
-  </AccordionItem>
-
-  <AccordionItem title="All Elements">
-    <AllElements />
   </AccordionItem>
 </Accordion>

@@ -8,12 +8,11 @@
 		if (!(event.target instanceof HTMLFormElement)) return;
 		event.preventDefault();
 		const data = new FormData(event.target);
-		dispatch('submit', { event, data });
+		dispatch('submit', { event, data, action: event.target.action });
 	}
 </script>
 
 <Form action="?/addLocation" method="POST" on:submit={handleSubmit}>
-	<input type="hidden" name="table" value="vendor" />
 	<FormGroup>
 		<TextInput
 			labelText="Location Name"
@@ -27,7 +26,7 @@
 		/>
   </FormGroup>
 	<FormGroup>
-		<Checkbox name="active" labelText="Active" />
+		<Checkbox name="active" labelText="Active" checked />
   </FormGroup>
 	<FormGroup>
 		<Button type="submit">Add Vendor</Button>

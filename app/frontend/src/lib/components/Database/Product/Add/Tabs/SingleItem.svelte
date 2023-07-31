@@ -1,15 +1,14 @@
 <script lang="ts">
-	import type { BrandResponse, VendorResponse } from '$lib/pocketbase-types';
 	import { createEventDispatcher } from 'svelte';
-	
 	import { Button, Form, FormGroup, Select, SelectItem, TextInput } from 'carbon-components-svelte';
-	
-	import { siteStore } from '$lib/stores/site';
 	import SetVisibility from '$lib/components/Database/SetVisibility/SetVisibility.svelte';
+	import type { BrandResponse, LocationResponse, VendorResponse } from '$lib/pocketbase-types';
 
-	const brands: BrandResponse[] = $siteStore.brands;
-	const vendors: VendorResponse[] = $siteStore.vendors;
 	const dispatch = createEventDispatcher();
+
+	export let vendors: VendorResponse[];
+	export let brands: BrandResponse[];
+	export let locations: LocationResponse[];
 
 function handleSubmit(event: Event) {
 	if (!(event.target instanceof HTMLFormElement)) return;
@@ -44,11 +43,11 @@ function handleSubmit(event: Event) {
 		</Select>
 		<Select labelText="Vendors" name="vendor" helperText="Who we get the item from." required>
 			{#each vendors as vendor}
-				<SelectItem value="{vendor.id}" text="{vendor.name}" />
+				<SelectItem value="{vendor.id}" text="{vendor.vendor}" />
 			{/each}
 		</Select>
 	</FormGroup>
-	<SetVisibility />
+	<SetVisibility {locations} />
 	<FormGroup>
 		<Button type="submit">Add Product</Button>
 	</FormGroup>

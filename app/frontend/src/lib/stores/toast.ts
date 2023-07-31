@@ -1,7 +1,7 @@
 import { generateID } from '$lib/utils';
 import { writable } from 'svelte/store';
 
-export const enum TToasts {
+export const enum Toasts {
   INFO = "info",
   ERROR = "error",
   SUCCESS = "success",
@@ -10,15 +10,13 @@ export const enum TToasts {
 
 type Toast = {
   id: string
-  type: TToasts | undefined
+  type: Toasts | undefined
   dismissable?: boolean
   timeout?: number
   message: string
 }
 
-type Toasts = Toast[];
-
-export const toasts = writable<Toasts>([]);
+export const toasts = writable<Toast[]>([]);
 
 export const addToast = (toast: Partial<Toast>, promise=null) => {
   // Create a unique ID so we can easily find/remove it
@@ -28,7 +26,7 @@ export const addToast = (toast: Partial<Toast>, promise=null) => {
   // Setup some sensible defaults for a toast.
   const defaults: Toast = {
     id,
-    type: TToasts.INFO,
+    type: Toasts.INFO,
     dismissable: true,
     timeout: 3000,
     message: "",

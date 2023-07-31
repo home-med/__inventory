@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { Checkbox, FormGroup } from 'carbon-components-svelte';
-	import { siteStore } from '$lib/stores/site';
 	import type { LocationResponse } from '$lib/pocketbase-types';
 
 	export let selected: string[] = [];
-	const locations: LocationResponse[] = $siteStore.locations;
+	export let locations: LocationResponse[] = [];
 	const toggleAll = (e: Event) => {
 		if (e.target instanceof HTMLInputElement) {
 			selected = e.target.checked ? [...locations.map(item => item.id)] : [];

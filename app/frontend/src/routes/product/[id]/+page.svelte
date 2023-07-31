@@ -11,15 +11,14 @@
 		TextArea,
 		TextInput
 	} from 'carbon-components-svelte';
-	import { siteStore } from '$lib/stores/site';
-	import { TToasts, addToast } from '$lib/stores/toast';
+	import { Toasts, addToast } from '$lib/stores/toast';
 	import SetVisibility from '$lib/components/Database/SetVisibility/SetVisibility.svelte';
 
 	export let data: PageData;
 
-	const brands: BrandResponse[] = $siteStore.brands;
-	const vendors: VendorResponse[] = $siteStore.vendors;
-	const locations: LocationResponse[] = $siteStore.locations;
+	const brands: BrandResponse[] = data.brands;
+	const vendors: VendorResponse[] = data.vendors;
+	const locations: LocationResponse[] = data.locations;
 
 	let product = data.product;
 	let id: string = product.id || '';
@@ -39,7 +38,7 @@
 		if (!(e.target instanceof HTMLFormElement)) return;
 		e.preventDefault();
 		addToast({
-			type: TToasts.INFO,
+			type: Toasts.INFO,
 			message: 'Nothing to do :('
 		});
 	};
@@ -84,7 +83,7 @@
 			>
 				<SelectItem value="" text="" />
 				{#each vendors as vendor (vendor.id)}
-					<SelectItem value={vendor.id} text={vendor.name} />
+					<SelectItem value={vendor.id} text={vendor.vendor} />
 				{/each}
 			</Select>
 

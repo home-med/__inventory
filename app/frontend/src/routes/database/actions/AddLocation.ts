@@ -1,4 +1,3 @@
-import { pb } from "$lib/client";
 import type { Action } from "@sveltejs/kit";
 
 const addLocation: Action =  async ({ request, locals }) => {
@@ -7,7 +6,7 @@ const addLocation: Action =  async ({ request, locals }) => {
   const short_name = formData.get("short_name")?.toString() || "";
   const archived = formData.get("archived") === "yes" || false;
 
-  const data = structuredClone(await pb.collection("location").create({name, short_name, archived}));
+  const data = structuredClone(await locals.pb.collection("location").create({name, short_name, archived}));
   
   return {message: "Finished", data};
 }

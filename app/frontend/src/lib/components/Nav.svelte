@@ -3,7 +3,7 @@
   const links: string[][] = [
     ["Home", "/"],
     ["Product", "/product"]
-,    ["Database", "/database"],
+,   ["Database", "/database"],
     ["Miscellaneous", "/misc"],
     ["About", "/about"],
     ["Long", "/long"],

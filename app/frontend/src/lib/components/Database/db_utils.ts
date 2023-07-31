@@ -4,12 +4,12 @@ import type { ActionResult } from "@sveltejs/kit";
 
 
 export const submitForm = async  (event: CustomEvent) => {
-  const data = event.detail.data;
-  const action = event.detail.action;
-  const e = event.detail.event;
-  console.log(action, ...data);
-  const response = await fetch(action, {method: "POST", body: data})
-  const result: ActionResult = deserialize(await response.json());
+  // const e = event.detail.event;
+  const detail = event.detail;
+  console.log([...detail.data]);
+  const response = await fetch(detail.action, {method: "POST", body: detail.data});
+  const result: ActionResult = deserialize(await response.text());
+  console.log(result);
 
   if (result.type === "success") {
     await invalidateAll();

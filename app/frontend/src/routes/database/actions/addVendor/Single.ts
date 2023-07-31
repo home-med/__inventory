@@ -1,4 +1,3 @@
-import { pb } from "$lib/client";
 import type { Action } from "@sveltejs/kit";
 
 // const addVendor: Action = async ({ request, locals }) => {
@@ -21,12 +20,12 @@ import type { Action } from "@sveltejs/kit";
 // };
 
 
-const addVendor: Action = async({ request }) => {
+const addVendor: Action = async({ request, locals }) => {
   const formData = await request.formData();
   const vendors = formData.get("name")?.toString().split(/\r?\n/g) || [""];
   const archived = formData.get("archived") === "yes" || false;
 
-  const data = structuredClone(await Promise.allSettled(vendors.map(name => pb.collection("vendor").create({name, archived}, {$autoCancel: false}))));
+  const data = structuredClone(await Promise.allSettled(vendors.map(name => locals.pb.collection("vendor").create({name, archived}, {$autoCancel: false}))));
   
   return structuredClone({message: "Finished", data});
 };

@@ -1,18 +1,21 @@
 <script lang="ts">
 	import { applyAction, deserialize } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import { TToasts, addToast } from '$lib/stores/toast';
-	import { MultipleItems, SingleItem, UploadFiles } from './Tabs';
+	import type { BrandResponse, LocationResponse, VendorResponse } from '$lib/pocketbase-types';
+	import { Toasts, addToast } from '$lib/stores/toast';
+	import { SingleItem, UploadFiles } from './Tabs';
 	import { Tabs, Tab, TabContent } from 'carbon-components-svelte';
 
+	export let brands: BrandResponse[] = [];
+	export let vendors: VendorResponse[] = [];
+	export let locations: LocationResponse[] = [];
 
 	const handleSubmit = async (event: CustomEvent) => {
 		const form = event.detail.event.target;
 		const data = event.detail.data;
 
-
 		addToast({
-			"type": TToasts.INFO,
+			"type": Toasts.INFO,
 			"message": "Spinning up",
 			"timeout": 3000
 		})
@@ -26,9 +29,9 @@
 
 		if (result.type === "success") {
 			addToast({
-				"type": TToasts.INFO,
+				"type": Toasts.INFO,
 				"message": "Success",
-			})
+			});
 			await invalidateAll();
 		}
 
@@ -37,12 +40,10 @@
 </script>
 
 <Tabs>
-	<Tab label="Single Item" />
-	<Tab label="Mulitple Items" />
 	<Tab label="File Upload" />
+	<Tab label="Single Item" />
 	<svelte:fragment slot="content">
-		<TabContent><SingleItem on:submit={handleSubmit} /></TabContent>
-		<TabContent><MultipleItems on:submit={handleSubmit} /></TabContent>
-		<TabContent><UploadFiles on:submit={handleSubmit} /></TabContent>
+		<TabContent><UploadFiles {locations} on:submit={handleSubmit} /></TabContent>
+		<TabContent><SingleItem {vendors} {brands} {locations} on:submit={handleSubmit} /></TabContent>
 	</svelte:fragment>
 </Tabs>

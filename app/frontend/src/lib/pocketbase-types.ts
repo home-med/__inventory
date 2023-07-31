@@ -80,7 +80,7 @@ export type UsersRecord = {
 }
 
 export type VendorRecord = {
-	name: string
+	vendor: string
 	archived?: boolean
 }
 

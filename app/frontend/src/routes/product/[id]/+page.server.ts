@@ -1,5 +1,4 @@
 import type { BrandResponse, ProductResponse, VendorResponse } from "$lib/pocketbase-types";
-import { pb } from "$lib/client";
 import { fail, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -8,8 +7,8 @@ type Texpand = {
   vendor: VendorResponse
 }
 
-export const load: PageServerLoad = async ({params}) => {
-  const product: ProductResponse<Texpand> = structuredClone(await pb.collection("product").getOne(params.id, { expand:"brand,vendor,visibility,system_id" }));
+export const load: PageServerLoad = async ({params, locals}) => {
+  const product: ProductResponse<Texpand> = structuredClone(await locals.pb.collection("product").getOne(params.id, { expand:"brand,vendor,visibility,system_id" }));
   return { product };
 }
 
@@ -18,7 +17,7 @@ export const actions: Actions = {
    *     Update Item     *
    **********************/
 
-    updateItem: async ({request}) => {
+    updateItem: async ({request, locals}) => {
       const data = await request.formData();
       const item = data.get("item")?.toString();
       const upc = data.get("upc")?.toString();
@@ -33,7 +32,7 @@ export const actions: Actions = {
 
       console.log(item, {upc, ean, custom_sku, manufact_sku, brand, vendor})
   
-      const info = await pb.collection(table).update(item, {upc, ean, custom_sku, manufact_sku, brand, vendor});
+      const info = await locals.pb.collection(table).update(item, {upc, ean, custom_sku, manufact_sku, brand, vendor});
       console.log(info);
       return {info}
     },

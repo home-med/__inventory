@@ -1,5 +1,4 @@
 import { derived, type Readable } from 'svelte/store';
-import { brands, vendors } from './client';
 
 export const batchPromiseProcessing = async (collection: any[], limit: number = 100, fn: Function) => {
   let ret = [];
@@ -43,41 +42,8 @@ export const generateID = (stringLength = 20) => {
 };
 
 export const cmp = (item1: unknown, item2: unknown) => {
-  if (typeof item1 === 'string' && typeof item2 === 'string') return item1.toLowerCase() === item2.toLowerCase();
-  return item1 === item2;
-}
-
-let allHeaders: string[] = [];
-const processCSVToJSON = (lineStr: string, lineNum: number, fileNum: number, notes: string = "", firstLineHeaders: boolean = true, delim: string = "§") => {
-  try {
-    const fixed_line: string[] = lineStr
-      .replaceAll(/^"|"$/g, "")
-      .replaceAll(/","/g, delim)
-      .split(delim);
-    
-  
-    if (firstLineHeaders && allHeaders.length === 0) {
-      allHeaders = fixed_line.map(item => item.trim().replaceAll(/\.?\s/g, "_").replaceAll(/\./g, "").replaceAll(/"+/g, '"').toLowerCase());
-      return null;
-    }
-
-    if (!fixed_line?.[0]) return;
-  
-    const processed = (allHeaders.reduce((o: any, k: string, i: number) => ({ ...o, [k]: (fixed_line[i] ?? "").replaceAll(/""/g, '"').trim() }), {}));
-    const entry = {
-      ...processed,
-      brand: (brands.filter((brand) => cmp(brand.name, processed.brand))?.pop()?.id),
-      vendor: (vendors.filter((vendor) => cmp(vendor.name, processed.vendor)))?.pop()?.id,
-      system_id: null,
-      notes,
-    }
-  
-    
-  
-    return entry;
-  } catch (e) {
-    if (e instanceof Error) {
-      console.log(`Passed args\nLineStr: ${lineStr}\nLineNum: ${lineNum}\nFileNum ${fileNum}\nFirstLineHeaders: ${firstLineHeaders}\nDelim: ${delim}\nError Message: ${e.message}\nError: ${e}\n\n`);
-    }
+  if (typeof item1 === 'string' && typeof item2 === 'string') {
+    return item1.toLowerCase() === item2.toLowerCase();
   }
+  return item1 === item2;
 }
