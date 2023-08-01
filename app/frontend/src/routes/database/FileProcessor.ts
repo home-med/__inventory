@@ -1,5 +1,5 @@
 export const processFiles = async (files: File[], givenHeaders: string[] = [], isFirstRowHeaders = false) => {
-  return await Promise.allSettled(files.map(async file => {
+  return await Promise.allSettled(files.flatMap(async file => {
     const fileData = (await file.text())
       .split(/\r?\n/)
       .map(item => item

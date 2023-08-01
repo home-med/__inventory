@@ -25,7 +25,8 @@
 			body: data,
 		});
 
-		const result = deserialize(await response.json());
+		const result = deserialize(await response.text());
+		console.log(result);
 
 		if (result.type === "success") {
 			addToast({
@@ -33,6 +34,11 @@
 				"message": "Success",
 			});
 			await invalidateAll();
+		} else {
+			addToast({
+				"type": Toasts.ERROR,
+				"message": "We borked!"
+			})
 		}
 
 		applyAction(result);
