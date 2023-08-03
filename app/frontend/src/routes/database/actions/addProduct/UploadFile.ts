@@ -1,7 +1,8 @@
-import { type Action, fail } from "@sveltejs/kit";
-import { processFiles } from "../../FileProcessor";
+import type { Action } from "@sveltejs/kit";
+import { importRecordsInParallel, processFiles } from "../../database_utils";
 import { cmp } from "$lib/utils";
 import { env } from "$env/dynamic/public";
+import addProductSingle from "./Single";
 
 const addProductFile: Action = async ({ request, locals }) => {
   const debug = env.PUBLIC_DEBUG === "true";
@@ -11,43 +12,30 @@ const addProductFile: Action = async ({ request, locals }) => {
   const system_id_location: string = data.get("system_id_location")?.toString() || "";
   const isFirstRowHeaders: boolean = data.get("isFirstRowHeaders") === "yes";
   const processedFiles = await processFiles(files, (data.get("headers")?.toString().split(",") ?? []), isFirstRowHeaders);
-  console.log(processedFiles);
-  const addProductResults = await Promise.allSettled(processedFiles.map(async segment => {
-    if (segment.status !== "fulfilled") return [];
-    const response = Promise.allSettled(segment.value.map(async item => {
-      return await locals.pb.collection("product").create(
-        {
-          ...item,
-          system_id: null,
-          brand: locals.brands.filter(brand => cmp(brand.name, item.brand))[0]?.id,
-          vendor: locals.vendors.filter(vendor => cmp(vendor.vendor, item.vendor))[0]?.id,
-          archived: false,
-          notes: ""
-        },
-        { $autoCancel: false }
-      )
-    }));
-    
-    return (await response).flatMap(item => {
-      segment.value.map()
-    })
-  }));
+  const items = processedFiles.flatMap(item => {
+    if (item.status === "rejected") return null;
+    return item.value;
+  }).filter(item => item);
 
-  const createSystemIDResults = system_id_location !== "" && await Promise.allSettled(addProductResults.map(async segment => {
-    if (segment.status === "rejected") return [];
-    return segment.value.map(item => {
-      return locals.pb.collection("product_system_id").create(
-        {
-          item: "",
-          system_id: "",
-          location: system_id_location
-        },
-        { $autoCancel: false }
-      )
-    });
-  }));
+  const addProductResults: Record<string, string>[] = (await importRecordsInParallel(
+    items.map((item) => ({
+      ...item,
+      // system_id: null,
+      brand: locals.brands.filter(brand => cmp(brand.name, item.brand))[0]?.id,
+      vendor: locals.vendors.filter(vendor => cmp(vendor.vendor, item.vendor))[0]?.id,
+      archived: false,
+      notes: "",
+    })),
+    locals.pb,
+    "product"
+  )).map((item: any) => {
+    if (item.status === "rejected") return null;
+    return item.value;
+  }).filter((item: any) => item);
 
-  return fail(400, { message: "Here we go again!" });
+  console.log("addProductResults", addProductResults);
+
+  return { message: "Here we go again!" };
 };
 
 export default addProductFile;

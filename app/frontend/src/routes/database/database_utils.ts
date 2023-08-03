@@ -1,3 +1,5 @@
+import type PocketBase from "pocketbase";
+
 export const processFiles = async (files: File[], givenHeaders: string[] = [], isFirstRowHeaders = false) => {
   return await Promise.allSettled(files.flatMap(async file => {
     const fileData = (await file.text())
@@ -34,4 +36,25 @@ export const processFiles = async (files: File[], givenHeaders: string[] = [], i
       }
     });
   }));
+}
+
+
+export const importRecordsInParallel = async (records: Record<string, string>[], client: PocketBase, table: string, limit: number=2500): Promise<any> => {
+  let results: PromiseSettledResult<Record<string, string>>[] = [];
+  console.time("Total Time")
+  for (let start=0, j=1; start < records.length; start += limit) {
+    const end = start + limit > records.length ? records.length : start + limit;
+    console.time()
+    const slicedResults = await Promise.allSettled(records.slice(start, end).map((record) => {
+      return client.collection(table).create(record, { $autoCancel: false});
+    }));
+
+    results = [
+      ...results,
+      ...slicedResults
+    ]
+    console.timeEnd();
+  }
+  console.timeEnd("Total Time")
+  return results;
 }

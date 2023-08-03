@@ -1,5 +1,5 @@
 import { type Action, fail } from "@sveltejs/kit";
-import { processFiles } from "../../FileProcessor";
+import { processFiles } from "../../database_utils";
 
 const addBrandFile: Action = async ({ request, locals }) => {
   const data = await request.formData();

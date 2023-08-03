@@ -1,6 +1,7 @@
 <script lang="ts">
-	import Nav from '$lib/components/Nav.svelte';
-	import { Toasts } from '$lib/components/Toast';
+	import "../app.css";
+	import Nav from "$lib/components/Nav.svelte";
+	import { Toasts } from "$lib/components/Toast";
 </script>
 
 <svelte:head>
