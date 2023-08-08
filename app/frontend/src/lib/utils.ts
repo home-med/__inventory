@@ -30,7 +30,7 @@ export const dedupe = <T>(store: Readable<T>): Readable<T> => {
   })
 }
 
-export const generateID = (stringLength = 20) => {
+export const generateID = (stringLength = 20): string => {
   let randomStr = "";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZqeytrpolkadjsghfgmnbzxcvnQPOWEYRKASJHDGFMNBCVX--___-_jsfhrlg-_124903564576986483658fgh4sdfh687e4h897WETHJ68F7G4688471877GFHJFFGJ87469857468746hfghwrtiyj4598yhdjkhgnk";
   for (let index = 0; index < stringLength; index++) {
@@ -40,6 +40,10 @@ export const generateID = (stringLength = 20) => {
   }
   return randomStr;
 };
+
+export function isUndefinedOrNull<T>(value: T | undefined | null): value is null | undefined {
+  return <T>value === undefined || <T>value === null;
+}
 
 export const cmp = (item1: unknown, item2: unknown) => {
   if (typeof item1 === 'string' && typeof item2 === 'string') {

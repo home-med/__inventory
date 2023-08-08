@@ -10,23 +10,28 @@
 	export let vendors: VendorResponse[] = [];
 	export let locations: LocationResponse[] = [];
 
+	
+
 	const handleSubmit = async (event: CustomEvent) => {
 		const form = event.detail.event.target;
 		const data = event.detail.data;
+		const formData = new FormData(form);
 
+		console.log(formData.getAll("files"));
+
+		console.log("data:", [...formData])
 		addToast({
 			"type": Toasts.INFO,
 			"message": "Spinning up",
 			"timeout": 3000
-		})
+		});
 
 		const response = await fetch(form.action, {
 			method: "POST",
-			body: data,
+			body: formData,
 		});
 
 		const result = deserialize(await response.text());
-		console.log(result);
 
 		if (result.type === "success") {
 			addToast({

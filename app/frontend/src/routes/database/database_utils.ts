@@ -25,9 +25,10 @@ export const processFiles = async (files: File[], givenHeaders: string[] = [], i
         (pv: any, k: string, i: number) => ({
           ...pv,
           [k]: item[i]?.replaceAll(/""/g, '"')
-          .replace(/&#38;|&amp;/, "&")
-          .replace(/&#039;|&#39;/, "'")
-          .trim() }),
+            .replace(/&#38;|&amp;/, "&")
+            .replace(/&#039;|&#39;/, "'")
+            .trim()
+        }),
         {}
       );
 
@@ -38,17 +39,18 @@ export const processFiles = async (files: File[], givenHeaders: string[] = [], i
   }));
 }
 
+type Records = {
 
-export const importRecordsInParallel = async (records: Record<string, string>[], client: PocketBase, table: string, limit: number=2500): Promise<any> => {
+
+}
+
+export const processRecordsInParrel = async (records: any, func:Function, limit: number = 2500): Promise<any> => {
   let results: PromiseSettledResult<Record<string, string>>[] = [];
   console.time("Total Time")
-  for (let start=0, j=1; start < records.length; start += limit) {
+  for (let start = 0, j = 1; start < records.length; start += limit) {
     const end = start + limit > records.length ? records.length : start + limit;
     console.time()
-    const slicedResults = await Promise.allSettled(records.slice(start, end).map((record) => {
-      return client.collection(table).create(record, { $autoCancel: false});
-    }));
-
+    const slicedResults = await Promise.allSettled(records.slice(start, end).map(async (record: any[]) => func(record)));
     results = [
       ...results,
       ...slicedResults

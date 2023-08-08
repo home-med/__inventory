@@ -8,7 +8,7 @@
 	<!-- Roboto -->
 	<link
 		rel="stylesheet"
-		href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700"
+		href="https://fonts.googleapis.com/css?family=Roboto:400"
 	/>
 	<!-- Roboto Mono -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono" />

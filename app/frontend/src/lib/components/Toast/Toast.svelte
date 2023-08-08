@@ -1,11 +1,11 @@
 <script>
   import { createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { SuccessIcon } from './Icons';
-	import { ErrorIcon } from './Icons';
-	import { InfoIcon } from './Icons';
-	import { CloseIcon } from './Icons';
-  import { LoadingIcon } from './Icons';
+	import { SuccessIcon } from '../Icons';
+	import { ErrorIcon } from '../Icons';
+	import { InfoIcon } from '../Icons';
+	import { CloseIcon } from '../Icons';
+  import { LoadingIcon } from '../Icons';
 
   const dispatch = createEventDispatcher();
 
