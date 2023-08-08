@@ -1,70 +1,86 @@
 <script lang="ts">
 	import { generateID } from '$lib/utils';
+	import { Button } from '../Elements/Button';
 
-	export let id: string = generateID();
-	export let name: string;
-	export let labelText: string = '';
-  export let multiple: boolean|undefined;
-  export let accept: string[] = ["*"];
+	const id = generateID();
+	let files: FileList | undefined;
+	let input: HTMLInputElement;
 
-  let files: File[] = [];
-
-	const handleFiles = (files: File[]) => {
-		console.log(files);
+	const onDrop = (e: DragEvent) => {
+		e.preventDefault();
+		const _files = e.dataTransfer?.files;
+		const dt = new DataTransfer();
+		Array.prototype.forEach.call(_files, (file) => {
+			dt.items.add(file);
+		});
+		
+		files = dt.files
+		input.files = files;
 	};
 
-  const deleteItem = (name: string) => files = files.filter(item => item.name !== name);
+	const removeItem = (item: File) => {
+		const dt = new DataTransfer();
+		Array.prototype.forEach.call(files, file => {
+			if (file !== item) dt.items.add(file);
+		});
 
-  const onChange = (e: Event) => {
-    console.log(e);
-  }
+		files = dt.files
+		input.files = files;
+	}
 
-	const onDrop = (e: Event) => {
-    console.log(e);
-    let dt;
-    let dtFiles;
-    if (e instanceof DragEvent) {
-      dt = e.dataTransfer;
-      dtFiles = dt?.files;
-      
-		} else {
-      dt = e.target as HTMLInputElement;
-      dtFiles = dt?.files;
-    }
-    if (dtFiles) {
-      files = [...dtFiles];
-      handleFiles(files);
-    }
+	const onChange = (e: Event) => {
+		if (e.target instanceof HTMLInputElement) console.log(e.target.files);
 	};
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-	class="p-5 w-full border-2 border-dashed border-neutral-300 hover:border-purple-600"
-	on:dragenter|preventDefault
-	on:dragleave|preventDefault
+	class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100"
+	on:click={() => input.click()}
+	on:keypress={() => input.click()}
+	on:drag
+	on:dragstart
+	on:dragend
 	on:dragover|preventDefault
-	on:drop|preventDefault={onDrop}
+	on:dragenter
+	on:dragleave
+	on:drop={onDrop}
 >
-	<p class="mt-0">
-		Upload multiple files with the file dialog or by dragging and dropping onto the dashed region
-	</p>
-	<input type="file" {id} {name} {multiple} accept={accept.join(",")} class="hidden" on:change={onDrop} />
-	<label
-		for={id}
-		class="inline-block p-4 font-bold bg-purple-500 rounded cursor-pointer text-neutral-200"
-		>{labelText}</label
+	<svg
+		aria-hidden="true"
+		class="mb-3 w-10 h-10 text-gray-400"
+		fill="none"
+		stroke="currentColor"
+		viewBox="0 0 24 24"
+		xmlns="http://www.w3.org/2000/svg"
+		><path
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			stroke-width="2"
+			d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+		/></svg
 	>
-  <ul class="flex flex-col p-4">
-    {#each files as file}
-      <li class="flex mb-2 h-12 border-1 border-slate-800">
-        <button
-          class="px-4 py-2 bg-red-400 rounded"
-          on:keypress={() => deleteItem(file.name)}
-          on:click={() => deleteItem(file.name)}
-        >X</button>
-        <div class="px-4 basis-4/5">{file.name}</div>
-      </li>
-    {/each}
-  </ul>
+	<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+		<span class="font-semibold">Click to upload</span> or drag and drop
+	</p>
+	<label for={id} class="flex flex-col items-center" tabIndex="0" />
+	<input
+		{id}
+		type="file"
+		name="files"
+		multiple
+		bind:files
+		bind:this={input}
+		on:change={onChange}
+		class="hidden"
+	/>
 </div>
+<ol class="flex flex-col gap-y-6">
+	{#if files}
+		{#each files as file}
+			<li class="flex gap-y-2 gap-x-5 justify-items-center h-4 text-lg align-middle">
+				<Button kind="danger" class="w-8 h-8" on:click={() => removeItem(file)}>X</Button>
+				<span class="inline-block">{file.name} - {file.size}</span>
+			</li>
+		{/each}
+	{/if}
+</ol>

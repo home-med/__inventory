@@ -1,19 +1,33 @@
 <script lang="ts">
 	import { FormGroup, Checkbox, TextArea } from 'carbon-components-svelte';
-	import { createEventDispatcher } from 'svelte';
-	import FileDropZone from '$lib/components/FileDropZone/fileDropZone.svelte';
+	import {FileDropZone} from '$lib/components/FileDropZone';
 
 	let isFirstRowHeaders: boolean = true;
+	let files: FileList;
 
+	const onDrop = (e: DragEvent) => {
+		e.preventDefault();
+		if (e.dataTransfer?.items) {
+			[...e.dataTransfer.items].forEach(item=> {
+				const file = item.getAsFile();
+				if (file) {
+
+				}
+			})
+		}
+	}
+
+	const onChange = (e: Event) => {
+		console.log(e);
+	}
+
+	$: {
+		if (files?.length > 0) console.log([...files]);
+	}
 </script>
 
 <FormGroup legendText="Files">
-	<FileDropZone
-		name="files"
-		multiple
-		accept={['.csv']}
-		labelText="Add Files"
-	/>
+<FileDropZone />
 </FormGroup>
 <FormGroup legendText="Options">
 	<Checkbox
