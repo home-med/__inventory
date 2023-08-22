@@ -21,6 +21,7 @@ export const processFiles = async (files: File[], givenHeaders: string[] = [], i
       );
     return fileData.map((line: string) => {
       const item = line.split("§");
+      if (!item) console.log(line);
       const item_flattened = headers.reduce(
         (pv: any, k: string, i: number) => ({
           ...pv,

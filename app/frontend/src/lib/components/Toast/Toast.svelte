@@ -1,65 +1,82 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
-	import { SuccessIcon } from '../Icons';
-	import { ErrorIcon } from '../Icons';
-	import { InfoIcon } from '../Icons';
-	import { CloseIcon } from '../Icons';
-  import { LoadingIcon } from '../Icons';
+	import { SuccessIcon, ErrorIcon, InfoIcon, CloseIcon, LoadingIcon, WarningIcon, DangerIcon } from '../Icons';
 
-  const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher();
 
 	export let type = 'error';
-	export let dismissable = true;
+	export let dismissable = false;
+	$: toastProps = {
+		role: 'alert',
+		class: [
+			'relative',
+			'flex',
+			'flex-row',
+			'items-center',
+			'p-3',
+			'border-r-3',
+			'gap-4',
+			'mx-auto',
+			'mt-0',
+			'mb-2',
+			'w-[40rem]',
+			'h-28',
+			'border-l-2',
+			'border-solid',
+			'rounded',
+			'shadow-md',
+			type === 'primary' && 'bg-blue-100',
+			type === 'primary' && 'text-blue-700',
+			type === 'primary' && 'border-blue-700',
+			type === 'info' && 'bg-indigo-100',
+			type === 'info' && 'text-indigo-700',
+			type === 'info' && 'border-indigo-700',
+			type === 'success' && 'bg-green-100',
+			type === 'success' && 'text-green-700',
+			type === 'success' && 'border-green-700',
+			type === 'warning' && 'bg-yellow-100',
+			type === 'warning' && 'text-yellow-700',
+			type === 'warning' && 'border-yellow-700',
+			type === 'danger' && 'bg-red-100',
+			type === 'danger' && 'text-red-700',
+			type === 'danger' && 'border-red-700',
+		]
+			.filter(Boolean)
+			.join(' ')
+	};
 </script>
 
-<article class={type} role="alert" transition:fade>
-	{#if type === "success"}
+<article {...toastProps} transition:fade >
+	<div class="flex-initial">
+		{#if type === 'success'}
 		<SuccessIcon />
-	{:else if type === "error"}
+		{:else if type === 'error'}
 		<ErrorIcon />
-	{:else if type === "info"}
+		{:else if type === 'info'}
 		<InfoIcon />
-  {:else if type === "loading"}
-    <LoadingIcon />
-	{/if}
-
-	<div class="text">
-		<slot />
-	</div>
-
-	{#if dismissable}
-		<button class="close" on:click={() => dispatch('dismiss')}>
-			<CloseIcon width="0.8em" />
+		{:else if type === 'loading'}
+		<LoadingIcon />
+		{:else if type === 'warning'}
+		<WarningIcon />
+		{:else if type === 'danger'}
+		<DangerIcon />
+		{/if}
+		</div>
+		<div class="self-start">
+		{#if dismissable}
+		<button class="absolute top-4 right-4 p-0 m-0 w-4 text-white bg-transparent border-0 cursor-pointer" on:click={() => dispatch('dismiss')}>
+			<CloseIcon  />
 		</button>
-	{/if}
+		{/if}
+		<section class="flex-grow">
+			<slot />
+		</section>
+		</div>
 </article>
 
 <style lang="postcss">
-	article {
-		color: white;
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.2rem;
-		display: flex;
-		align-items: center;
-		margin: 0 auto 0.5rem auto;
-		width: 20rem;
-	}
-	.error {
-		background: IndianRed;
-	}
-	.success {
-		background: MediumSeaGreen;
-	}
-	.info {
-		background: SkyBlue;
-	}
-	.loading {
-		background: SandyBrown;
-	}
-	.text {
-		margin-left: 1rem;
-	}
+
 	button {
 		color: white;
 		background: transparent;

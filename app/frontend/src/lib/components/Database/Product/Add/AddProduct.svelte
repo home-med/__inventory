@@ -1,60 +1,81 @@
 <script lang="ts">
 	import { applyAction, deserialize } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
-	import type { BrandResponse, LocationResponse, VendorResponse } from '$lib/pocketbase-types';
+	import type { LocationResponse } from '$lib/pocketbase-types';
 	import { Toasts, addToast } from '$lib/stores/toast';
-	import { SingleItem, UploadFiles } from './Tabs';
+	import SingleItem from './Tabs/SingleItem.svelte';
+	import UploadFiles from './Tabs/UploadFiles.svelte';
 	import { Tabs, Tab, TabContent } from 'carbon-components-svelte';
-
-	export let brands: BrandResponse[] = [];
-	export let vendors: VendorResponse[] = [];
 	export let locations: LocationResponse[] = [];
 
-	
+	let processState = "Idle"
+	let locationCount = 0;
+	let uploadCount = 0;
+	let files: File[] = [];
+
+	const checkNumberOfPotentialRecords = async () => {
+		if (!files) {
+			uploadCount = 0;
+			return;
+		}
+		uploadCount = 0;
+		for (const file of files) {
+			const fileRead = await file.text();
+			const amt = fileRead.match(/\r?\n/g)?.length ?? 0;
+			uploadCount += amt * 2 + (locationCount*amt) - 2;
+		}
+	};
 
 	const handleSubmit = async (event: CustomEvent) => {
 		const form = event.detail.event.target;
-		const data = event.detail.data;
 		const formData = new FormData(form);
 
-		console.log(formData.getAll("files"));
-
-		console.log("data:", [...formData])
 		addToast({
-			"type": Toasts.INFO,
-			"message": "Spinning up",
-			"timeout": 3000
+			type: Toasts.INFO,
+			message: 'Spinning up',
+			timeout: 3000
 		});
 
 		const response = await fetch(form.action, {
-			method: "POST",
-			body: formData,
+			method: 'POST',
+			body: formData
 		});
 
 		const result = deserialize(await response.text());
 
-		if (result.type === "success") {
+		if (result.type === 'success') {
 			addToast({
-				"type": Toasts.INFO,
-				"message": "Success",
+				type: Toasts.INFO,
+				message: 'Success'
 			});
 			await invalidateAll();
 		} else {
 			addToast({
-				"type": Toasts.ERROR,
-				"message": "We borked!"
-			})
+				type: Toasts.ERROR,
+				message: 'We borked!'
+			});
 		}
 
+		invalidateAll();
+
 		applyAction(result);
-	}
+	};
 </script>
 
 <Tabs>
 	<Tab label="File Upload" />
 	<Tab label="Single Item" />
 	<svelte:fragment slot="content">
-		<TabContent><UploadFiles {locations} on:submit={handleSubmit} /></TabContent>
-		<TabContent><SingleItem {vendors} {brands} {locations} on:submit={handleSubmit} /></TabContent>
+		<TabContent>
+			<UploadFiles
+				{locations}
+				{processState}
+				{uploadCount}
+				on:submit={handleSubmit}
+				on:filesUpdated={(e) => {files = e.detail.files; checkNumberOfPotentialRecords();}}
+				on:VisibilityUpdated={(e) => {locationCount = e.detail.selected.length; checkNumberOfPotentialRecords();}}
+			/>
+			</TabContent>
+		<TabContent><SingleItem on:submit={handleSubmit} /></TabContent>
 	</svelte:fragment>
 </Tabs>
