@@ -1,12 +1,17 @@
 import { generateID } from '$lib/utils';
 import { writable } from 'svelte/store';
 
-export const enum Toasts {
-  INFO = "info",
-  ERROR = "error",
-  SUCCESS = "success",
-  LOADING = "loading",
-};
+
+
+
+	export const enum Toasts {
+		INFO = "info",
+		ERROR = "error",
+		SUCCESS = "success",
+		LOADING = "loading",
+		WARNING = "warning",
+		DANGER = "danger"
+	};
 
 type Toast = {
   id: string
@@ -28,7 +33,6 @@ export const addToast = (toast: Partial<Toast>, promise=null) => {
     id,
     type: Toasts.INFO,
     dismissable: true,
-    timeout: 3000,
     message: "",
   };
 

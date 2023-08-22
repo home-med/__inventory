@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { generateID } from '$lib/utils';
-	import { Button } from '../Elements/Button';
+	import { createEventDispatcher } from 'svelte';
+	import Button from '$lib/components/Elements/Button.svelte';
 
+	const dispatch = createEventDispatcher();
+
+	
 	const id = generateID();
 	let files: FileList | undefined;
 	let input: HTMLInputElement;
+	
 
 	const onDrop = (e: DragEvent) => {
 		e.preventDefault();
@@ -16,6 +21,7 @@
 		
 		files = dt.files
 		input.files = files;
+		dispatch("filesUpdated", {files});
 	};
 
 	const removeItem = (item: File) => {
@@ -26,15 +32,20 @@
 
 		files = dt.files
 		input.files = files;
+		dispatch("filesUpdated", {files});
 	}
 
 	const onChange = (e: Event) => {
-		if (e.target instanceof HTMLInputElement) console.log(e.target.files);
+		if (e.target instanceof HTMLInputElement && e.target.files) {
+			files = e.target.files;
+			dispatch("filesUpdated", {files});
+		}
 	};
 </script>
 
+<div class="flex flex-1 gap-x-5">
 <div
-	class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer hover:bg-gray-100"
+	class="flex justify-center items-center p-5 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer w-[25rem] h-[15rem] shrink hover:bg-gray-100"
 	on:click={() => input.click()}
 	on:keypress={() => input.click()}
 	on:drag
@@ -62,7 +73,7 @@
 	<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
 		<span class="font-semibold">Click to upload</span> or drag and drop
 	</p>
-	<label for={id} class="flex flex-col items-center" tabIndex="0" />
+	<label for={id} class="flex flex-col items-center" tabIndex="0">
 	<input
 		{id}
 		type="file"
@@ -73,14 +84,16 @@
 		on:change={onChange}
 		class="hidden"
 	/>
+	</label>	
 </div>
-<ol class="flex flex-col gap-y-6">
+<ol class="flex flex-col gap-y-1">
 	{#if files}
-		{#each files as file}
-			<li class="flex gap-y-2 gap-x-5 justify-items-center h-4 text-lg align-middle">
-				<Button kind="danger" class="w-8 h-8" on:click={() => removeItem(file)}>X</Button>
-				<span class="inline-block">{file.name} - {file.size}</span>
-			</li>
-		{/each}
+	{#each files as file}
+	<li class="flex gap-x-2">
+		<Button kind="danger" class="px-2 py-0" on:click={() => removeItem(file)}>X</Button>
+		<span class="inline-block">{file.name}</span>
+	</li>
+	{/each}
 	{/if}
 </ol>
+</div>
