@@ -13,7 +13,6 @@
 	class="flex"
 	on:click
 	on:click={() => {
-		
 		open = !!open;
 	}}
 	bind:open
