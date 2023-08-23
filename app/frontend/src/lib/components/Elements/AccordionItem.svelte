@@ -1,10 +1,23 @@
 <script lang="ts">
-	import { ChevronIcon } from '../Icons';
+	import { ChevronIcon } from '$lib/components/Icons';
+	import { getContext } from 'svelte';
+	import { createEventDispatcher } from 'svelte';
 	export let open: boolean = false;
 	export let label: string = 'Accordian Item 1';
+	const ctx = getContext("Accordion");
+	
 </script>
 
-<details class="flex" bind:open>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<details
+	class="flex"
+	on:click
+	on:click={() => {
+		
+		open = !!open;
+	}}
+	bind:open
+>
 	<summary class="inline-flex">
 		{label}
 		<span
@@ -19,5 +32,6 @@
 <style>
 	summary {
 		list-style: none;
+		cursor: pointer;
 	}
 </style>

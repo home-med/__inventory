@@ -4,15 +4,12 @@
 	import AddProduct from '$lib/components/Database/Product/Add/AddProduct.svelte';
 	import AddLocation from '$lib/components/Database/Location/Add/AddLocation.svelte';
 	import ProductSearch from '$lib/components/Database/Product/Search/Search.svelte';
-	import { Accordion, AccordionItem, Tab } from 'carbon-components-svelte';
 	import type { PageData } from './$types';
 	import ExportProduct from '$lib/components/Database/Product/Export/ExportProduct.svelte';
+	import { Accordion, AccordionItem } from '$lib/components/Elements';
 
 	export let data: PageData;
-	const brands = data.brands;
-	const vendors = data.vendors;
 	const locations = data.locations;
-	const products = data.products;
 </script>
 
 <svelte:head>
@@ -21,23 +18,23 @@
 <section>
 	<h1 class="text-3xl">Add items to database</h1>
 	<Accordion>
-		<AccordionItem title="Add Brand">
+		<AccordionItem label="Add Brand">
 			<AddBrand />
 		</AccordionItem>
 
-		<AccordionItem title="Add Vendor">
+		<AccordionItem label="Add Vendor">
 			<AddVendor />
 		</AccordionItem>
 
-		<AccordionItem title="Add Product">
+		<AccordionItem label="Add Product">
 			<AddProduct {locations} />
 		</AccordionItem>
 
-		<AccordionItem title="Add Location">
+		<AccordionItem label="Add Location">
 			<AddLocation />
 		</AccordionItem>
 
-		<AccordionItem title="Product Search">
+		<AccordionItem label="Product Search">
 			<ProductSearch />
 		</AccordionItem>
 	</Accordion>
@@ -46,7 +43,7 @@
 <section class="mt-6">
 	<h1 class="text-3xl">Export data from database</h1>
 	<Accordion>
-		<AccordionItem title="Export Product">
+		<AccordionItem label="Export Product">
 			<ExportProduct />
 		</AccordionItem>
 	</Accordion>

@@ -1,10 +1,14 @@
 <script lang="ts">
-	import { ChevronIcon } from "$lib/components/Icons";
-
+	import { setContext } from 'svelte';
+	setContext("Accordion", {
+		currentOpen: null,
+	});
 </script>
 
-<slot />
+<ul on:click on:focus on:keypress on:mouseover on:mouseenter on:mouseleave>
+	<slot />
+</ul>
 
 <style>
-  
+	
 </style>

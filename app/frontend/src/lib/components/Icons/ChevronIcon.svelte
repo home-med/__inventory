@@ -3,12 +3,14 @@
 </script>
 
 <svg
+	{width}
 	xmlns="http://www.w3.org/2000/svg"
 	fill="none"
-	viewBox="0 0 24 24"
+	viewBox="0 0 48 48"
 	stroke-width="1.5"
-  {width}
 	stroke="currentColor"
+	stroke-linecap="round"
+	stroke-linejoin="round" 
 >
-	<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+	<path d="M39 16.5l-15 15-15-15" />
 </svg>
