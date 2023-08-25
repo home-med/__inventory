@@ -8,6 +8,7 @@ const addProductFile: Action = async ({ request, locals }) => {
   let visibleLocations: string[] = (data.get("locations") ?? null)?.toString().split(",") ?? [];
   const system_id_location: string = data.get("system_id_location")?.toString() || "";
   const isFirstRowHeaders: boolean = data.get("isFirstRowHeaders") === "yes";
+  const eComPublished:Record<string, string>[] = [];
   const processedFiles = await processFiles(files, (data.get("headers")?.toString().split(",") ?? []), isFirstRowHeaders);
   const items = processedFiles.flatMap(item => {
     if (item.status === "rejected") return null;
@@ -15,7 +16,8 @@ const addProductFile: Action = async ({ request, locals }) => {
   })
     .filter(item => item)
     .map(item => {
-      const orig_sys_id = item.system_id
+      const orig_sys_id = item.system_id;
+      if (item.published_to_ecom.toLowerCase() === "yes") eComPublished.push(item);
       return {
         ...item,
         orig_sys_id,
@@ -40,9 +42,6 @@ const addProductFile: Action = async ({ request, locals }) => {
     }
   }).filter(Boolean);
 
-  let count = 0;
-  let borked: Record<string, string>[] = [];
-
   const setSystemIDs = addProductResults.map((product: Record<string, string>) => ({
     item: product.id,
     system_id: product.orig_sys_id,
@@ -63,24 +62,45 @@ const addProductFile: Action = async ({ request, locals }) => {
   });
 
   if (visibleLocations[0] !== "") {
-    console.log("Setting up visibility")
+    console.log("Setting up visibility");
     await locals.pb.collection("status").update("z1ikx1sue58s2kn", { "currentState": "Creating product visibility map data" });
-    const setVisibility = addProductResults.reduce(
-      (acc: Record<string, any>[], cv) => {
-        visibleLocations.forEach(location => {
-          acc.push({
-            item: cv.id,
-            location,
-            eCom: true,
-            archived: false,
-          })
+    const publishedToEcom  = eComPublished.reduce(
+      (pv: Record<string, unknown>[], cv) => {
+        addProductResults.forEach(item => {
+          if (item.orig_sys_id === cv.orig_sys_id) {
+            return visibleLocations.reduce(
+              (acc: Record<string, unknown>, ccv) => {
+                acc.push({
+
+                });
+                return acc;
+              },
+              []
+            )
+          }
         });
-        return acc;
+        return pv;
       },
       []
-    );
+    )
+    console.log(publishedToEcom.length);
+    const setVisibility = publishedToEcom
+      .reduce(
+        (acc: Record<string, any>[], cv) => {
+          visibleLocations.forEach(location => {
+            acc.push({
+              item: cv.id,
+              location,
+              eCom: true,
+              archived: false,
+            })
+          });
+          return acc;
+        },
+        []
+      );
 
-    console.log("Creating product visibility data")
+    console.log("Creating product visibility data");
     await locals.pb.collection("status").update("z1ikx1sue58s2kn", { "currentState": "Creating product visibility map data" });
     await processRecordsInParrel(
       setVisibility,

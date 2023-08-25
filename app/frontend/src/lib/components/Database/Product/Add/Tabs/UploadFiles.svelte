@@ -18,16 +18,13 @@
 			processState = e.record.currentState;
 		});
 		PB.collection('product').subscribe('*', async function (e) {
-			if (uploadCount === 0) return;
-			uploadCount -= 1;
+			uploadCount += 1;
 		});
 		PB.collection('product_system_id').subscribe("*", async function (e) {
-			if (uploadCount === 0) return;
-			uploadCount -= 1;
+			uploadCount += 1;
 		});
 		PB.collection('product_visibility').subscribe("*", async function (e) {
-			if (uploadCount === 0) return;
-			uploadCount -= 1;
+			uploadCount += 1;
 		})
 	});
 
@@ -55,7 +52,7 @@
 </script>
 
 <Form action="?/addProductFile" method="POST" enctype="multipart/form" on:submit={handleSubmit}>
-	Records left to create: {uploadCount}<br />
+	Records Created: {uploadCount}<br />
 	Status: {processState}
 	<FileDrop on:filesUpdated />
 	<SetVisibility on:VisibilityUpdated {locations} />

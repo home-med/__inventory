@@ -5,7 +5,6 @@
 	export let open: boolean = false;
 	export let label: string = 'Accordian Item 1';
 	const ctx = getContext("Accordion");
-	
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

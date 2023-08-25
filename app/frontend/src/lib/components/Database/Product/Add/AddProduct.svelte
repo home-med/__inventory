@@ -13,19 +13,6 @@
 	let uploadCount = 0;
 	let files: File[] = [];
 
-	const checkNumberOfPotentialRecords = async () => {
-		if (!files) {
-			uploadCount = 0;
-			return;
-		}
-		uploadCount = 0;
-		for (const file of files) {
-			const fileRead = await file.text();
-			const amt = fileRead.match(/\r?\n/g)?.length ?? 0;
-			uploadCount += amt * 2 + (locationCount*amt) - 2;
-		}
-	};
-
 	const handleSubmit = async (event: CustomEvent) => {
 		const form = event.detail.event.target;
 		const formData = new FormData(form);
@@ -46,16 +33,17 @@
 		if (result.type === 'success') {
 			addToast({
 				type: Toasts.INFO,
-				message: 'Success'
+				message: 'Success',
+				timeout: 3000,
 			});
 			await invalidateAll();
 		} else {
 			addToast({
 				type: Toasts.ERROR,
-				message: 'We borked!'
+				message: 'We borked!',
 			});
 		}
-
+		uploadCount = 0;
 		invalidateAll();
 
 		applyAction(result);
@@ -70,10 +58,10 @@
 			<UploadFiles
 				{locations}
 				{processState}
-				{uploadCount}
+				bind:uploadCount
 				on:submit={handleSubmit}
-				on:filesUpdated={(e) => {files = e.detail.files; checkNumberOfPotentialRecords();}}
-				on:VisibilityUpdated={(e) => {locationCount = e.detail.selected.length; checkNumberOfPotentialRecords();}}
+				on:filesUpdated={(e) => {files = e.detail.files;}}
+				on:VisibilityUpdated={(e) => {locationCount = e.detail.selected.length;}}
 			/>
 			</TabContent>
 		<TabContent><SingleItem on:submit={handleSubmit} /></TabContent>
