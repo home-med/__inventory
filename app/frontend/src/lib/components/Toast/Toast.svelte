@@ -38,9 +38,9 @@
 			type === 'warning' && 'bg-yellow-100',
 			type === 'warning' && 'text-yellow-700',
 			type === 'warning' && 'border-yellow-700',
-			type === 'danger' && 'bg-red-100',
-			type === 'danger' && 'text-red-700',
-			type === 'danger' && 'border-red-700',
+			type === 'error' && 'bg-red-100',
+			type === 'error' && 'text-red-700',
+			type === 'error' && 'border-red-700',
 		]
 			.filter(Boolean)
 			.join(' ')

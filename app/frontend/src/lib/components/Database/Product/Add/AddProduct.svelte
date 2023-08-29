@@ -41,6 +41,7 @@
 			addToast({
 				type: Toasts.ERROR,
 				message: 'We borked!',
+				timeout: 3000,
 			});
 		}
 		uploadCount = 0;

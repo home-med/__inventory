@@ -3,12 +3,13 @@ import { cmp } from "$lib/utils";
 import type { Action } from "@sveltejs/kit";
 
 const addProductFile: Action = async ({ request, locals }) => {
+  await locals.pb.collection("status").update("z1ikx1sue58s2kn", { "currentState": "Processing received data." });
   const data = await request.formData();
   const files: File[] = data.getAll('files') as File[] ?? [];
   let visibleLocations: string[] = (data.get("locations") ?? null)?.toString().split(",") ?? [];
   const system_id_location: string = data.get("system_id_location")?.toString() || "";
   const isFirstRowHeaders: boolean = data.get("isFirstRowHeaders") === "yes";
-  const eComPublished:Record<string, string>[] = [];
+  const eComPublished: Record<string, unknown>[] = [];
   const processedFiles = await processFiles(files, (data.get("headers")?.toString().split(",") ?? []), isFirstRowHeaders);
   const items = processedFiles.flatMap(item => {
     if (item.status === "rejected") return null;
@@ -17,7 +18,7 @@ const addProductFile: Action = async ({ request, locals }) => {
     .filter(item => item)
     .map(item => {
       const orig_sys_id = item.system_id;
-      if (item.published_to_ecom.toLowerCase() === "yes") eComPublished.push(item);
+      if (item.publish_to_ecom.toLowerCase() === "yes") eComPublished.push(item);
       return {
         ...item,
         orig_sys_id,
@@ -29,7 +30,6 @@ const addProductFile: Action = async ({ request, locals }) => {
       }
     });
 
-  console.log("Creating product data")
   await locals.pb.collection("status").update("z1ikx1sue58s2kn", { "currentState": "Creating product initial data" });
   const addProductResults: Record<string, string>[] = (await processRecordsInParrel(
     items,
@@ -48,7 +48,6 @@ const addProductFile: Action = async ({ request, locals }) => {
     location: system_id_location
   }));
 
-  console.log("Creating product_system_id data")
   await locals.pb.collection("status").update("z1ikx1sue58s2kn", { "currentState": "Creating system ID map data" });
   const systemIDs = (await processRecordsInParrel(
     setSystemIDs,
@@ -62,31 +61,20 @@ const addProductFile: Action = async ({ request, locals }) => {
   });
 
   if (visibleLocations[0] !== "") {
-    console.log("Setting up visibility");
-    await locals.pb.collection("status").update("z1ikx1sue58s2kn", { "currentState": "Creating product visibility map data" });
-    const publishedToEcom  = eComPublished.reduce(
-      (pv: Record<string, unknown>[], cv) => {
-        addProductResults.forEach(item => {
-          if (item.orig_sys_id === cv.orig_sys_id) {
-            return visibleLocations.reduce(
-              (acc: Record<string, unknown>, ccv) => {
-                acc.push({
-
-                });
-                return acc;
-              },
-              []
-            )
-          }
-        });
+    await locals.pb.collection("status").update("z1ikx1sue58s2kn", { "currentState": "Processing product visibility data." });
+    const publishedToEcom = eComPublished.reduce(
+      (pv: Record<string, unknown>[], cv: Record<string, unknown>) => {
+        const apr = addProductResults.find(item => item.orig_sys_id === cv.system_id);
+        pv.push(apr || {});
         return pv;
       },
       []
     )
-    console.log(publishedToEcom.length);
+      .filter(Boolean);
+
     const setVisibility = publishedToEcom
       .reduce(
-        (acc: Record<string, any>[], cv) => {
+        (acc: Record<string, unknown>[], cv) => {
           visibleLocations.forEach(location => {
             acc.push({
               item: cv.id,

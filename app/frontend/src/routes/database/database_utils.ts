@@ -4,10 +4,17 @@ export const processFiles = async (files: File[], givenHeaders: string[] = [], i
   return await Promise.allSettled(files.flatMap(async file => {
     const fileData = (await file.text())
       .split(/\r?\n/)
-      .map(item => item
-        .replaceAll(/^"|"$/g, "")
+      .filter(Boolean)
+      .map(item => {
+        item = item.replaceAll(/\$/g, "")
+        if (item.startsWith('"')) return item
         .replaceAll(/"?,"?/g, "§")
-      );
+        .replaceAll(/^"|"$/g, "")
+        
+        return item
+          .replaceAll(/"(.+),(.+)"/g,"$1$2")
+          .replaceAll(/,/g, "§");
+      });
     const headers = (
       isFirstRowHeaders && fileData.shift()?.split("§")
       || givenHeaders
@@ -47,17 +54,13 @@ type Records = {
 
 export const processRecordsInParrel = async (records: any, func:Function, limit: number = 2500): Promise<any> => {
   let results: PromiseSettledResult<Record<string, string>>[] = [];
-  console.time("Total Time")
   for (let start = 0, j = 1; start < records.length; start += limit) {
     const end = start + limit > records.length ? records.length : start + limit;
-    console.time()
     const slicedResults = await Promise.allSettled(records.slice(start, end).map(async (record: any[]) => func(record)));
     results = [
       ...results,
       ...slicedResults
     ]
-    console.timeEnd();
   }
-  console.timeEnd("Total Time")
   return results;
 }
